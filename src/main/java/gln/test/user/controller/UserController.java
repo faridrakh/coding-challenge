@@ -1,10 +1,10 @@
 package gln.test.user.controller;
 
 import gln.test.common.CommonHelper;
-import gln.test.config.ApplicationContext;
 import gln.test.user.model.UserModel;
 import gln.test.user.service.UserService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,7 +38,7 @@ public class UserController {
         res.setUpdateAt(ch.dateToStr(res.getDtUpdate()));
         res.setDtCreate(null);
         res.setDtUpdate(null);
-        return ResponseEntity.status(HttpStatus.CREATED).body(res);
+        return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 
     @DeleteMapping("/{id}")
@@ -60,7 +60,7 @@ public class UserController {
             res.put("data", user);
             return ResponseEntity.status(HttpStatus.OK).body(res);
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{}");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).contentType(MediaType.APPLICATION_JSON_UTF8).body("{}");
         }
     }
 

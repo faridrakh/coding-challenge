@@ -1,14 +1,12 @@
 import gln.test.config.AppConfig;
 import gln.test.config.JdbcConfig;
 import gln.test.config.WebConfig;
-import gln.test.user.controller.UserController;
 import gln.test.user.model.UserModel;
 import gln.test.user.service.UserService;
-import org.hibernate.SessionFactory;
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
@@ -18,7 +16,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import static org.mockito.Mockito.*;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -40,7 +37,7 @@ public class UserControllerTest {
     public void setUp() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
     }
-    
+
     @Test
     public void getUser_OkStatus() throws Exception {
         UserModel user = new UserModel();
@@ -62,6 +59,16 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.data.avatar", is(user.getAvatar())))
                 .andExpect(jsonPath("$.data.job", is(user.getJob())))
                 .andExpect(jsonPath("$.data.createAt", is(user.getCreateAt())))
+        ;
+    }
+
+    @Test
+    public void getUser_NotFoundStatus() throws Exception {
+        JSONObject jsonObject = new JSONObject("{}");
+        mockMvc.perform(get("/api/users/{id}", 0))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$").isEmpty())
         ;
     }
 
