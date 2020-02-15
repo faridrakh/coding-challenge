@@ -1,8 +1,7 @@
 package gln.test.user.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -10,8 +9,7 @@ import java.util.Date;
 @Entity
 @Table(name="gln.user")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Setter
-@Getter
+@Data
 public class UserModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

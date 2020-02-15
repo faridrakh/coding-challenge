@@ -18,7 +18,7 @@ public class UserController {
     private UserService userService;
     private CommonHelper ch = new CommonHelper();
 
-    UserController(UserService userService){
+    public UserController(UserService userService){
         this.userService = userService;
     }
 

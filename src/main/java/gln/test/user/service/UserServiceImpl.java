@@ -1,7 +1,6 @@
 package gln.test.user.service;
 
 import gln.test.common.CommonHelper;
-import gln.test.config.ApplicationContext;
 import gln.test.user.model.UserModel;
 import gln.test.user.dao.UserDao;
 import org.springframework.stereotype.Service;
