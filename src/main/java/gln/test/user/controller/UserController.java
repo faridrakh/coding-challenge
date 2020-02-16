@@ -22,7 +22,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping
+    @PostMapping()
     public ResponseEntity<?> doAddUserRsApi(@RequestBody UserModel request) {
         request = userService.createUser(request);
         request.setCreateAt(ch.dateToStr(request.getDtCreate()));

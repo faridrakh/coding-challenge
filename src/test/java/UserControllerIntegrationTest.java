@@ -17,9 +17,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.hamcrest.Matchers.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -27,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {WebConfig.class, JdbcConfig.class, AppConfig.class})
 @WebAppConfiguration
-public class UserControllerTest {
+public class UserControllerIntegrationTest {
     private MockMvc mockMvc;
 
     @Autowired
@@ -87,6 +85,13 @@ public class UserControllerTest {
     }
 
     @Test
+    public void deleteUser_NoContentStatus() throws Exception {
+        mockMvc.perform(delete("/api/users/28"))
+                .andExpect(status().isNoContent())
+        ;
+    }
+
+    @Test
     public void getUser_OkStatus() throws Exception {
         UserModel user = new UserModel();
         user.setId(1);
@@ -117,6 +122,16 @@ public class UserControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$").isEmpty())
+        ;
+    }
+
+    @Test
+    public void getUserList_OkStatus() throws Exception {
+        JSONObject jsonObject = new JSONObject("{}");
+        mockMvc.perform(get("/api/users?page=1"))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data").isNotEmpty())
         ;
     }
 
