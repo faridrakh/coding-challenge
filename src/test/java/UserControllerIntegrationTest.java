@@ -18,6 +18,8 @@ import org.springframework.web.context.WebApplicationContext;
 
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -26,16 +28,62 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = {WebConfig.class, JdbcConfig.class, AppConfig.class})
 @WebAppConfiguration
 public class UserControllerTest {
-
     private MockMvc mockMvc;
+
     @Autowired
     private WebApplicationContext wac;
+
     @Autowired
     private UserService userService;
 
     @Before
     public void setUp() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+    }
+
+    @Test
+    public void addUser_OkStatus() throws Exception {
+        String postBody = "{" +
+                "\"email\":\"test@test.com\"," +
+                "\"firstName\":\"Test2\"," +
+                "\"lastName\":\"Test2\"," +
+                "\"avatar\":\"test2\"," +
+                "\"job\":\"tester2\"" +
+                "}";
+                mockMvc.perform(post("/api/users/").contentType(MediaType.APPLICATION_JSON_UTF8).content(postBody))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").isNotEmpty())
+                .andExpect(jsonPath("$.firstName").isNotEmpty())
+                .andExpect(jsonPath("$.lastName").isNotEmpty())
+                .andExpect(jsonPath("$.email").isNotEmpty())
+                .andExpect(jsonPath("$.avatar").isNotEmpty())
+                .andExpect(jsonPath("$.job").isNotEmpty())
+                .andExpect(jsonPath("$.createAt").isNotEmpty())
+        ;
+    }
+
+    @Test
+    public void updateUser_OkStatus() throws Exception {
+        String postBody = "{" +
+                "\"email\":\"test@test.com\"," +
+                "\"firstName\":\"Test2\"," +
+                "\"lastName\":\"Test2\"," +
+                "\"avatar\":\"test2\"," +
+                "\"job\":\"tester2\"" +
+                "}";
+        mockMvc.perform(patch("/api/users/2").contentType(MediaType.APPLICATION_JSON_UTF8).content(postBody))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").isNotEmpty())
+                .andExpect(jsonPath("$.firstName").isNotEmpty())
+                .andExpect(jsonPath("$.lastName").isNotEmpty())
+                .andExpect(jsonPath("$.email").isNotEmpty())
+                .andExpect(jsonPath("$.avatar").isNotEmpty())
+                .andExpect(jsonPath("$.job").isNotEmpty())
+                .andExpect(jsonPath("$.updateAt").isNotEmpty())
+
+        ;
     }
 
     @Test
